@@ -47,7 +47,7 @@ public class URM {
         } 
     }
 
-    boolean readFile() {
+    boolean readFile() {//READ THE FILE
         try {
             
             File file = new File(path);
@@ -58,12 +58,11 @@ public class URM {
                 if (line.trim().equals("")) {
                     continue;
                 }
-                if (firstLine) {
-                    line = line.trim();
-                    String[] URMContent = line.split("\\s+");
+                if (firstLine) {//GET THE INITIAL STATE OF THE REGISTER
+                    line = line.trim();//TRIM SPACES BEFORE AND AFTER THE LINE
+                    String[] URMContent = line.split("\\s+"); //SPLIT LINE BASE ON SPACE OR TAB
                     for (int index = 0; index < URMContent.length; index++) {
                         urm[index] = Integer.parseInt(URMContent[index]);
-
                     }
                     firstLine = false;
                     output.add(Arrays.copyOf(urm, urm.length));
@@ -72,6 +71,10 @@ public class URM {
                     line = line.trim();
                     String[] syntax = line.split("\\s+");
                     tmp.operation = syntax[0];
+                    /*
+                        CHECKS IF THE INPUT IN VALID AND RETURNS FALSE IF NOT. 
+                        IF INPUTS ARE VALID IT WILL BE ADDED TO THE LIST OF INSTRUCTIONS
+                    */
                     if (tmp.operation.equals("S") || tmp.operation.equals("s")
                             || tmp.operation.equals("Z") || tmp.operation.equals("z")) {
                         if (syntax.length == 2) {
@@ -114,7 +117,7 @@ public class URM {
         return true;
     }
 
-    void writeFile() {
+    void writeFile() {//WRITE OUTPUT FILE 
         loadingScreen("Writing_Output_To_File");
         FileWriter writer = null;
         try {
@@ -142,9 +145,12 @@ public class URM {
         System.out.println("Output has been Written to File!");
     }
 
-    boolean doOperations() {
+    boolean doOperations() {//EXECUTE OPERATIONS 
         loadingScreen("Executing_Operations");
         for (int i = 0; i < instructions.size();) {
+            /*
+                IF OPERATION IS "S" IT JUST ADD 1 TO THE VALUE OF THE URM INDEX
+            */
             if ((instructions.get(i).operation.equals("S")
                     || instructions.get(i).operation.equals("s"))
                     && instructions.get(i).a >= 0
@@ -153,7 +159,12 @@ public class URM {
                 urm[(instructions.get(i).a)] = urm[(instructions.get(i).a)] + 1;
                 i++;
                 output.add(Arrays.copyOf(urm, urm.length));
-            } else if ((instructions.get(i).operation.equals("Z")
+            } 
+            /*
+                IF OPERATION IS "Z" IT JUST MAKES THE VALUE OF THE URM INDEX 
+                EQUAL TO ZERO
+            */
+            else if ((instructions.get(i).operation.equals("Z")
                     || instructions.get(i).operation.equals("z"))
                     && instructions.get(i).a >= 0
                     && instructions.get(i).b < 0
@@ -161,7 +172,13 @@ public class URM {
                 urm[(instructions.get(i).a)] = 0;
                 i++;
                 output.add(Arrays.copyOf(urm, urm.length));
-            } else if ((instructions.get(i).operation.equals("J")
+            } 
+            /*
+                IF OPERATION IS "J" IT CHECKS IF THE VALUES OF THE 2 URM INDEXES
+                ARE EQUAL, AND IF EQUAL IT GOES TO THAT URM INDEX AND PROCESS IT'S 
+                INSTRUCTION, IF NOT IT WILL JUST PROCEED TO THE NEXT INSTRUCTION
+             */
+            else if ((instructions.get(i).operation.equals("J")
                     || instructions.get(i).operation.equals("j"))
                     && instructions.get(i).a >= 0
                     && instructions.get(i).b >= 0
@@ -172,7 +189,12 @@ public class URM {
                     i++;
                     output.add(Arrays.copyOf(urm, urm.length));
                 }
-            } else if ((instructions.get(i).operation.equals("C")
+            } 
+            /*
+                IF OPERATION IS "C" IT WILL COPY TO VALUE OF THE FIRST URM INDEX
+                TO THE SECOND URM INDEX
+            */
+            else if ((instructions.get(i).operation.equals("C")
                     || instructions.get(i).operation.equals("c"))
                     && instructions.get(i).a >= 0
                     && instructions.get(i).b >= 0
@@ -180,7 +202,11 @@ public class URM {
                     urm[(instructions.get(i).b)] = urm[(instructions.get(i).a)];
                     i++;
                     output.add(Arrays.copyOf(urm, urm.length));                
-            }else if (i > instructions.size()) {
+            }
+            /*
+                TERMINATE PROGRAM SINCE ALL OPERATIONS ARE EXECUTED
+            */
+            else if (i > instructions.size()) {
                 break;
             } else {
                 return false;
@@ -191,7 +217,7 @@ public class URM {
         return true;
     }
 
-    void loadingScreen(String s) {
+    void loadingScreen(String s) {//SIMULATE A LOADING SCREEN FOR FUN PURPOSES 
         String load = s + "[                    ]";
         int j = 13;
         for (int i = 0; i < 200; i++) {
@@ -211,7 +237,13 @@ public class URM {
     }
 
     private class Syntax {
-
+        /*
+            A CLASS THAT HOLD THE INSTRUCTIONS
+            "OPERATION" VARIABLE HOLDS THE VALID OPERATION
+            "A" VARIABLE HOLDS THE FIRST INDEX FOR ALL THE OPERATIONS
+            "B" VARIABLE HOLDS THE SECOND INDEX FOR THE "C" AND "J" OPERATIONS
+            "C" VARIABLE HOLDS THE THIRD INDEX FOR THE "J" OPERATION
+        */
         String operation = " ";
         int a = -1;
         int b = -1;
