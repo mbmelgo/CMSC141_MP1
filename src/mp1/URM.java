@@ -45,6 +45,12 @@ public class URM {
                 System.out.println("Contains Invalid Instruction");
             }
         } 
+        
+        try {
+            System.in.read();
+        } catch (IOException ex) {
+            Logger.getLogger(URM.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     boolean readFile() {//READ THE FILE
